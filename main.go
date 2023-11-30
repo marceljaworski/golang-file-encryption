@@ -40,16 +40,34 @@ func printHelp(){
 
 func encryptHandle(){
 	if len(os.Args) < 3{
-		fmt.Println("missing the path to the file. For more info, run go run . help")
+		Println("missing the path to the file. For more info, run go run . help")
+		os.Exit(0)
 	}
 	file := os.Args[2]
 	if !validateFile(file){
 		panic("File not found")
 	}
 	password := getPassword()
+	fmt.Println("\nEncrypting...")
+	filecrypt.Encrypt(file, password)
+	fmt.Println("\n file sucessfully protected")
 }
 
 func decryptHandle(){
+	if len(os.Args) < 3{
+		Println("missing the path to the file. For more info, run go run . help")
+		os.Exit(0)
+	}
+	file := os.Args[2]
+	if !validateFile(file){
+		panic("File not found")
+	}
+	fmt.Print("Enter password:")
+	password, _ := term.ReadPassword(0)
+	fmt.Println("\nDecrypting...")
+	filecrypt.Decrypt(file, password)
+	fmt.Println("\n file sucessfully decrypted")
+
 
 }
 
@@ -65,8 +83,11 @@ func getPassword() []byte{
 	return password
 }
 
-func validatePassword(){
-
+func validatePassword(password1 []byte, password2 []byte) bool{
+	if !bytes.Equal(password1, password2){
+		return false
+	}
+	return true
 }
 
 func validateFile(file string) bool {
