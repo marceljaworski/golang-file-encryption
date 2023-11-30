@@ -1,9 +1,15 @@
 package main
 
-import
- 
-func main(){
-	if len(os.Args) < 2{
+import (
+	"bytes"
+	"fmt"
+	"os"
+
+	"github.com/marceljaworski/golang-file-encryption/filecrypt"
+)
+
+func main() {
+	if len(os.Args) < 2 {
 		printHelp()
 		os.Exit(0)
 	}
@@ -22,7 +28,7 @@ func main(){
 	}
 }
 
-func printHelp(){
+func printHelp() {
 	fmt.Println("file evcryption")
 	fmt.Println("Simple file evcrypter for your day-to-day needs")
 	fmt.Println("")
@@ -38,13 +44,13 @@ func printHelp(){
 	fmt.Println("")
 }
 
-func encryptHandle(){
-	if len(os.Args) < 3{
+func encryptHandle() {
+	if len(os.Args) < 3 {
 		Println("missing the path to the file. For more info, run go run . help")
 		os.Exit(0)
 	}
 	file := os.Args[2]
-	if !validateFile(file){
+	if !validateFile(file) {
 		panic("File not found")
 	}
 	password := getPassword()
@@ -53,13 +59,13 @@ func encryptHandle(){
 	fmt.Println("\n file sucessfully protected")
 }
 
-func decryptHandle(){
-	if len(os.Args) < 3{
+func decryptHandle() {
+	if len(os.Args) < 3 {
 		Println("missing the path to the file. For more info, run go run . help")
 		os.Exit(0)
 	}
 	file := os.Args[2]
-	if !validateFile(file){
+	if !validateFile(file) {
 		panic("File not found")
 	}
 	fmt.Print("Enter password:")
@@ -68,30 +74,29 @@ func decryptHandle(){
 	filecrypt.Decrypt(file, password)
 	fmt.Println("\n file sucessfully decrypted")
 
-
 }
 
-func getPassword() []byte{
+func getPassword() []byte {
 	fmt.Print("Enter password")
 	password, _ := term.ReadPassword(0)
 	fmt.Print("\nConfirm Password: ")
 	password2, _ := term.ReadPassword(0)
-	if !validatePassword(password, password, password2){
+	if !validatePassword(password, password, password2) {
 		fmt.Print("\nPasswords do not match. please try again\n")
 		return getPassword()
 	}
 	return password
 }
 
-func validatePassword(password1 []byte, password2 []byte) bool{
-	if !bytes.Equal(password1, password2){
+func validatePassword(password1 []byte, password2 []byte) bool {
+	if !bytes.Equal(password1, password2) {
 		return false
 	}
 	return true
 }
 
 func validateFile(file string) bool {
-	if _, err := os.Stat(file); os.IsNotExist(err){
+	if _, err := os.Stat(file); os.IsNotExist(err) {
 		return false
 	}
 	return true
